@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Space Enviro Architects — The Meridian</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --carbon:#12141a;
+    --carbon-2:#1a1d24;
+    --ivory:#f4efe6;
+    --ivory-dim:#cfc9bd;
+    --ember:#e14432;
+    --ember-dim:#9c3327;
+    --brass:#c9a66b;
+    --glass-bg:rgba(244,239,230,0.06);
+    --glass-brd:rgba(244,239,230,0.16);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--carbon);
+    color:var(--ivory);
+    font-family:'Inter',sans-serif;
+    overflow-x:hidden;
+    cursor:default;
+  }
+  ::selection{background:var(--ember);color:var(--ivory);}
+  h1,h2,h3,.serif{font-family:'Fraunces',serif;}
+  .mono{font-family:'JetBrains Mono',monospace;letter-spacing:0.02em;}
+  a{color:inherit;text-decoration:none;}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+
+  /* ---------- NAV ---------- */
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:500;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px 40px;
+  }
+  .brand{display:flex;align-items:center;gap:12px;}
+  .brand-mark{
+    width:46px;height:46px;background:var(--ember);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    border-radius:3px;flex-shrink:0;
+  }
+  .brand-mark span{color:var(--ivory);font-weight:700;font-size:8.2px;line-height:1.15;letter-spacing:0.02em;font-family:'Inter',sans-serif;}
+  .brand-name{display:flex;flex-direction:column;line-height:1.05;}
+  .brand-name .b1{font-weight:600;font-size:16.5px;letter-spacing:0.01em;}
+  .brand-name .b2{font-size:9.5px;letter-spacing:0.3em;color:var(--ivory-dim);margin-top:3px;}
+  .nav-links{
+    display:flex;gap:34px;align-items:center;
+    background:var(--glass-bg);
+    backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+    border:1px solid var(--glass-brd);
+    padding:12px 26px;border-radius:100px;
+  }
+  .nav-links a{font-size:13.5px;font-weight:500;opacity:0.85;transition:opacity .25s;}
+  .nav-links a:hover{opacity:1;}
+  .nav-links .cta{
+    background:var(--ember);padding:9px 20px;border-radius:100px;opacity:1;
+  }
+  @media(max-width:820px){ .nav-links a:not(.cta){display:none;} nav{padding:16px 20px;} }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    height:100vh;position:relative;overflow:hidden;
+    background:linear-gradient(180deg,#332947 0%,#5b4266 28%,#a8607a 52%,#dd8a63 74%,#f1b06f 100%);
+  }
+  .hero-glass{
+    position:absolute;top:38%;left:40px;max-width:640px;z-index:20;
+    background:var(--glass-bg);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);
+    border:1px solid var(--glass-brd);border-radius:22px;padding:38px 42px;
+    box-shadow:0 30px 60px rgba(0,0,0,0.25);
+  }
+  .hero-glass .eyebrow{font-size:12px;letter-spacing:0.3em;color:var(--brass);margin-bottom:16px;font-family:'JetBrains Mono',monospace;}
+  .hero-glass h1{font-size:clamp(32px,4.6vw,58px);font-weight:500;line-height:1.05;color:var(--ivory);}
+  .hero-glass h1 em{font-style:italic;font-weight:300;color:var(--brass);}
+  .hero-glass p{margin-top:20px;font-size:15px;line-height:1.7;color:var(--ivory-dim);max-width:480px;}
+  .scroll-cue{
+    position:absolute;bottom:38px;left:50%;transform:translateX(-50%);z-index:20;
+    display:flex;flex-direction:column;align-items:center;gap:8px;
+    font-size:11px;letter-spacing:0.25em;color:var(--ivory);opacity:0.8;
+  }
+  .scroll-cue .stem{width:1px;height:38px;background:linear-gradient(var(--ivory),transparent);animation:pulse 1.8s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{opacity:.3;transform:scaleY(.7);}50%{opacity:1;transform:scaleY(1);}}
+
+  .cloud{position:absolute;border-radius:50%;background:rgba(255,255,255,0.85);filter:blur(18px);opacity:0.9;}
+
+  /* ---------- STAGE (sticky 3D tower, full cube) ---------- */
+  .stage-track{ height:460vh; position:relative; }
+  .stage{
+    position:sticky; top:0; height:100vh; overflow:hidden;
+    background:linear-gradient(180deg,#f1b06f 0%,#c9a1a0 22%,#7a7fa0 55%,#3a3f5c 100%);
+  }
+  .stage-clouds{position:absolute;inset:0;z-index:5;pointer-events:none;}
+  .stage-clouds .cloud{position:absolute;}
+
+  .tower-viewport{
+    position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:center;
+    perspective:1500px;perspective-origin:50% 62%;
+  }
+  .tower-rotator{
+    transform-style:preserve-3d;
+    width:340px;height:74vh;position:relative;margin-bottom:0;
+    will-change:transform;
+  }
+  .face{
+    position:absolute;top:0;height:100%;
+    display:flex;flex-direction:column;backface-visibility:hidden;
+    box-shadow:0 40px 90px rgba(0,0,0,0.45);
+  }
+  .face.front{ left:0; width:340px; background:#1b1d24; transform:translateZ(70px); display:flex;flex-direction:row; }
+  .face.back{ left:0; width:340px; background:#161820; transform:rotateY(180deg) translateZ(70px); flex-direction:column-reverse; }
+  .face.right{ left:100px; width:140px; background:#0f1116; transform:rotateY(90deg) translateZ(170px); }
+  .face.left{ left:-100px; width:140px; background:#14161c; transform:rotateY(-90deg) translateZ(170px); }
+
+  .face .block{flex:1;display:flex;flex-direction:column-reverse;}
+  .face .block.cream{background:#e9e2d3;flex:0.86;}
+  .face .block.dark{background:#20222a;flex:1;position:relative;}
+  .core-strip{position:absolute;top:0;bottom:0;left:8px;width:20px;background:linear-gradient(180deg,#f4efe6,#c9a66b);opacity:0.9;}
+  .floor-row{flex:1;display:flex;align-items:center;justify-content:space-evenly;position:relative;border-top:1px solid rgba(0,0,0,0.15);}
+  .win{
+    width:16%;height:52%;background:rgba(20,22,28,0.5);border-radius:1px;
+    transition:background 1.1s ease, box-shadow 1.1s ease;
+  }
+  .block.cream .win{background:rgba(60,50,40,0.35);}
+  .face.back .win{width:20%;background:rgba(255,255,255,0.05);}
+  .face.right .win, .face.left .win{width:34%;background:rgba(255,255,255,0.06);}
+  .floor-row.lit .win{background:#ffd48a;box-shadow:0 0 14px 2px rgba(255,190,110,0.55);}
+
+  .tower-ground{
+    position:absolute;bottom:0;left:0;right:0;height:14vh;z-index:1;
+    background:linear-gradient(180deg,rgba(20,22,28,0) 0%, #12141a 85%);
+  }
+
+  .floor-markers{
+    position:absolute; right:6%; top:8%; bottom:16%; width:220px;
+    display:flex;flex-direction:column-reverse;z-index:30;
+    opacity:0; transform:translateX(16px); transition:opacity .6s ease, transform .6s ease;
+    pointer-events:none;
+  }
+  .floor-markers.show{opacity:1;transform:translateX(0);pointer-events:auto;}
+  .fm-row{
+    flex:1;display:flex;align-items:center;gap:10px;border-top:1px solid rgba(244,239,230,0.08);
+    padding:0 4px;
+  }
+  .fm-row .fm-num{font-size:10.5px;color:var(--brass);width:30px;flex-shrink:0;}
+  .fm-row button{
+    font-size:10.5px;letter-spacing:0.06em;padding:5px 10px;border-radius:100px;
+    background:rgba(244,239,230,0.08);border:1px solid rgba(244,239,230,0.18);opacity:0;
+    transform:translateY(4px);transition:all .25s;
+  }
+  .floor-markers.show .fm-row button{opacity:1;transform:translateY(0);}
+  .fm-row button:hover{background:var(--ember);border-color:var(--ember);}
+
+  .stage-caption{
+    position:absolute;left:6%;top:10%;z-index:30;max-width:320px;
+    opacity:0;transition:opacity .5s ease;
+  }
+  .stage-caption.show{opacity:1;}
+  .stage-caption .eyebrow{font-size:11px;letter-spacing:0.3em;color:var(--brass);font-family:'JetBrains Mono',monospace;}
+  .stage-caption h2{font-size:clamp(24px,3vw,36px);font-weight:500;margin-top:10px;line-height:1.15;}
+
+  /* ---------- STUDIO ---------- */
+  .studio{padding:150px 8% 130px;display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center;}
+  .studio .tag{font-size:11px;letter-spacing:.3em;color:var(--brass);font-family:'JetBrains Mono',monospace;margin-bottom:22px;}
+  .studio h2{font-size:clamp(28px,3.4vw,44px);font-weight:500;line-height:1.2;}
+  .studio h2 em{font-style:italic;color:var(--brass);font-weight:300;}
+  .studio p{margin-top:22px;color:var(--ivory-dim);line-height:1.8;font-size:15px;max-width:480px;}
+  .studio-visual{
+    height:440px;border-radius:18px;position:relative;overflow:hidden;
+    background:
+      repeating-linear-gradient(0deg, rgba(244,239,230,0.05) 0 2px, transparent 2px 38px),
+      linear-gradient(160deg,#232631,#12141a 70%);
+    border:1px solid rgba(244,239,230,0.1);
+  }
+  .studio-visual::after{
+    content:'21 FLOORS · 2019—2026';position:absolute;bottom:20px;left:22px;
+    font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.15em;color:var(--ivory-dim);
+  }
+  .stat-row{display:flex;gap:36px;margin-top:36px;flex-wrap:wrap;}
+  .stat-row div b{display:block;font-family:'Fraunces',serif;font-size:30px;color:var(--ivory);}
+  .stat-row div span{font-size:11px;letter-spacing:.12em;color:var(--ivory-dim);}
+  @media(max-width:860px){.studio{grid-template-columns:1fr;}}
+
+  /* ---------- DIRECTORY ---------- */
+  .directory{padding:60px 8% 120px;}
+  .section-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:44px;flex-wrap:wrap;gap:16px;}
+  .section-head .tag{font-size:11px;letter-spacing:.3em;color:var(--brass);font-family:'JetBrains Mono',monospace;margin-bottom:14px;}
+  .section-head h2{font-size:clamp(26px,3.2vw,40px);font-weight:500;}
+  .section-head p{color:var(--ivory-dim);font-size:13.5px;max-width:320px;}
+  .floor-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;}
+  .floor-card{
+    background:var(--glass-bg);border:1px solid var(--glass-brd);border-radius:14px;
+    padding:22px 22px 20px;transition:transform .3s, border-color .3s, background .3s;
+  }
+  .floor-card:hover{transform:translateY(-4px);border-color:rgba(201,166,107,0.5);background:rgba(244,239,230,0.09);}
+  .floor-card .fc-top{display:flex;justify-content:space-between;align-items:flex-start;}
+  .floor-card .fc-num{font-family:'Fraunces',serif;font-size:30px;color:var(--brass);}
+  .floor-card .fc-type{font-size:10.5px;letter-spacing:.1em;color:var(--ivory-dim);margin-top:8px;line-height:1.6;}
+  .floor-card button{
+    margin-top:16px;width:100%;padding:10px 0;border-radius:100px;font-size:12px;letter-spacing:.08em;
+    background:rgba(244,239,230,0.08);border:1px solid rgba(244,239,230,0.16);transition:all .25s;
+  }
+  .floor-card button:hover{background:var(--ember);border-color:var(--ember);}
+
+  /* ---------- AMENITIES ---------- */
+  .amenities{padding:60px 8% 130px;}
+  .am-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1px;background:rgba(244,239,230,0.1);margin-top:44px;border-radius:14px;overflow:hidden;}
+  .am-item{background:var(--carbon-2);padding:32px 26px;}
+  .am-item .am-ico{width:34px;height:34px;border:1.4px solid var(--brass);border-radius:8px;margin-bottom:20px;}
+  .am-item h3{font-size:16px;font-weight:500;font-family:'Fraunces',serif;}
+  .am-item p{font-size:12.5px;color:var(--ivory-dim);margin-top:8px;line-height:1.6;}
+
+  /* ---------- CONTACT ---------- */
+  .contact{padding:60px 8% 100px;display:grid;grid-template-columns:1fr 1fr;gap:60px;}
+  .contact h2{font-size:clamp(28px,4vw,52px);font-weight:500;line-height:1.12;}
+  .contact h2 em{font-style:italic;color:var(--brass);font-weight:300;}
+  .contact p{color:var(--ivory-dim);margin-top:18px;max-width:420px;line-height:1.7;font-size:14.5px;}
+  .contact-form{background:var(--glass-bg);border:1px solid var(--glass-brd);border-radius:18px;padding:32px;backdrop-filter:blur(14px);}
+  .contact-form input,.contact-form textarea{
+    width:100%;background:rgba(244,239,230,0.06);border:1px solid rgba(244,239,230,0.16);
+    padding:13px 16px;border-radius:10px;color:var(--ivory);font-family:inherit;font-size:13.5px;margin-bottom:14px;
+  }
+  .contact-form textarea{resize:vertical;min-height:80px;}
+  .contact-form button{
+    width:100%;padding:14px 0;background:var(--ember);border-radius:10px;font-size:13.5px;letter-spacing:.06em;font-weight:500;
+    transition:background .25s;
+  }
+  .contact-form button:hover{background:#c8382a;}
+  .form-note{font-size:11px;color:var(--ivory-dim);margin-top:10px;text-align:center;}
+  @media(max-width:860px){.contact{grid-template-columns:1fr;}}
+
+  footer{padding:30px 8%;border-top:1px solid rgba(244,239,230,0.08);display:flex;justify-content:space-between;font-size:11.5px;color:var(--ivory-dim);flex-wrap:wrap;gap:10px;}
+
+  /* ---------- FLAT OVERLAY ---------- */
+  .flat-overlay{
+    position:fixed;inset:0;z-index:1000;background:var(--carbon);
+    visibility:hidden;opacity:0;overflow-y:auto;
+  }
+  .flat-overlay.open{visibility:visible;opacity:1;}
+  .cloud-wipe{position:fixed;inset:0;z-index:1100;pointer-events:none;}
+  .cloud-wipe span{
+    position:absolute;background:#fff;border-radius:50%;filter:blur(30px);
+    transform:scale(0);opacity:0;
+  }
+  .overlay-nav{position:sticky;top:0;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:22px 6%;background:linear-gradient(180deg,rgba(18,20,26,0.9),rgba(18,20,26,0));}
+  .overlay-nav .close-btn{background:var(--glass-bg);border:1px solid var(--glass-brd);padding:9px 18px;border-radius:100px;font-size:12.5px;}
+  .overlay-body{padding:20px 8% 100px;}
+  .of-tag{font-size:11px;letter-spacing:.3em;color:var(--brass);font-family:'JetBrains Mono',monospace;}
+  .of-title{font-size:clamp(28px,4vw,48px);font-weight:500;margin-top:14px;font-family:'Fraunces',serif;}
+  .of-sub{margin-top:12px;color:var(--ivory-dim);font-size:14px;max-width:560px;line-height:1.7;}
+
+  .unit-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:44px;}
+  .unit-card{
+    background:var(--carbon-2);border:1px solid rgba(244,239,230,0.1);border-radius:16px;
+    padding:20px 20px 22px;transition:border-color .25s, transform .25s;
+  }
+  .unit-card:hover{border-color:rgba(201,166,107,0.5);transform:translateY(-3px);}
+  .unit-card .uc-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+  .uc-badge{font-size:10.5px;letter-spacing:.1em;padding:5px 12px;border-radius:100px;font-family:'JetBrains Mono',monospace;}
+  .uc-badge.two{background:rgba(201,166,107,0.18);color:var(--brass);}
+  .uc-badge.three{background:rgba(225,68,50,0.18);color:#ff8b78;}
+  .uc-id{font-size:12px;color:var(--ivory-dim);letter-spacing:.1em;}
+  .plan-wrap{background:#0e1015;border-radius:10px;overflow:hidden;border:1px solid rgba(244,239,230,0.08);}
+  .plan-wrap svg{width:100%;height:auto;display:block;}
+  .plan-flip svg{transform:scaleX(-1);}
+  .uc-meta{display:flex;justify-content:space-between;align-items:flex-end;margin-top:14px;}
+  .uc-meta .uc-area{font-family:'JetBrains Mono',monospace;font-size:16px;}
+  .uc-meta .uc-area span{display:block;font-size:10px;color:var(--ivory-dim);letter-spacing:.1em;margin-top:2px;}
+  .uc-meta .uc-facing{font-size:11px;color:var(--ivory-dim);text-align:right;letter-spacing:.06em;}
+  .uc-cta{
+    margin-top:16px;width:100%;padding:11px 0;border-radius:100px;font-size:12px;letter-spacing:.08em;
+    background:rgba(244,239,230,0.08);border:1px solid rgba(244,239,230,0.16);transition:all .25s;
+  }
+  .uc-cta:hover{background:var(--ember);border-color:var(--ember);}
+
+  .of-desc{margin-top:46px;max-width:620px;color:var(--ivory-dim);line-height:1.85;font-size:15px;}
+  .of-cta{margin-top:70px;padding:60px 8%;margin-left:-8%;margin-right:-8%;background:var(--carbon-2);text-align:center;}
+  .of-cta h3{font-size:clamp(22px,3vw,32px);font-weight:500;}
+  .of-cta button{margin-top:24px;background:var(--ember);padding:15px 38px;border-radius:100px;font-size:13.5px;letter-spacing:.08em;}
+  .of-cta button:hover{background:#c8382a;}
+
+  @media(max-width:700px){
+    .hero-glass{left:20px;right:20px;padding:28px;}
+    .unit-grid{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="brand">
+    <div class="brand-mark"><span>SPACE<br>ENVIRO</span></div>
+    <div class="brand-name">
+      <span class="b1">Space Enviro</span>
+      <span class="b2">ARCHITECTS</span>
+    </div>
+  </div>
+  <div class="nav-links">
+    <a data-scroll="studio" href="javascript:void(0)">Studio</a>
+    <a data-scroll="directory" href="javascript:void(0)">Residences</a>
+    <a data-scroll="amenities" href="javascript:void(0)">Amenities</a>
+    <a data-scroll="contact" href="javascript:void(0)" class="cta">Enquire</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div id="heroClouds"></div>
+  <div class="hero-glass">
+    <div class="eyebrow">SPACE ENVIRO ARCHITECTS · PUNE</div>
+    <h1>We design <em>skylines</em><br>that hold their ground.</h1>
+    <p>Architecture and construction under one roof — from the first sketch to the last handover key. Scroll to watch The Meridian take shape, floor by floor.</p>
+  </div>
+  <div class="scroll-cue"><span>SCROLL</span><div class="stem"></div></div>
+</section>
+
+<!-- STICKY 3D STAGE -->
+<div class="stage-track" id="stageTrack">
+  <div class="stage" id="stage">
+    <div class="stage-clouds" id="stageClouds"></div>
+
+    <div class="stage-caption" id="stageCaption">
+      <div class="eyebrow">01 — UNDER CONSTRUCTION</div>
+      <h2>The Meridian, twenty-one floors above the tree line.</h2>
+    </div>
+
+    <div class="tower-viewport">
+      <div class="tower-rotator" id="towerRotator">
+        <div class="face front" id="faceFront"></div>
+        <div class="face back" id="faceBack"></div>
+        <div class="face right" id="faceRight"></div>
+        <div class="face left" id="faceLeft"></div>
+      </div>
+    </div>
+    <div class="tower-ground"></div>
+
+    <div class="floor-markers" id="floorMarkers"></div>
+  </div>
+</div>
+
+<!-- STUDIO -->
+<section class="studio" id="studio">
+  <div>
+    <div class="tag">02 — THE STUDIO</div>
+    <h2>Buildings are <em>promises</em><br>poured in concrete.</h2>
+    <p>Space Enviro Architects has spent the last seven years pairing architectural design with in-house construction — meaning the hand that draws the elevation is the same one that pours the slab. The Meridian is our flagship residential tower: 21 floors, four homes per floor, and a lobby that doesn't feel like a lobby.</p>
+    <div class="stat-row">
+      <div><b>21</b><span>FLOORS</span></div>
+      <div><b>80</b><span>RESIDENCES</span></div>
+      <div><b>7 yrs</b><span>IN PRACTICE</span></div>
+      <div><b>2026</b><span>POSSESSION</span></div>
+    </div>
+  </div>
+  <div class="studio-visual"></div>
+</section>
+
+<!-- DIRECTORY -->
+<section class="directory" id="directory">
+  <div class="section-head">
+    <div>
+      <div class="tag">03 — FLOOR DIRECTORY</div>
+      <h2>Choose your altitude.</h2>
+    </div>
+    <p>Every floor holds four residences — two 2BHKs and two 3BHKs, mirrored across the core. Tap a floor to see all four in top view.</p>
+  </div>
+  <div class="floor-grid" id="floorGrid"></div>
+</section>
+
+<!-- AMENITIES -->
+<section class="amenities" id="amenities">
+  <div class="section-head">
+    <div>
+      <div class="tag">04 — AMENITIES</div>
+      <h2>Beyond the four walls.</h2>
+    </div>
+  </div>
+  <div class="am-grid">
+    <div class="am-item"><div class="am-ico"></div><h3>Rooftop Deck</h3><p>An open-air terrace on the 21st floor with a 270° view of the city skyline.</p></div>
+    <div class="am-item"><div class="am-ico"></div><h3>Podium Gardens</h3><p>Landscaped palm-lined walkways ringing the tower base, lit at dusk.</p></div>
+    <div class="am-item"><div class="am-ico"></div><h3>Fitness Studio</h3><p>Double-height gym with natural light on the second podium level.</p></div>
+    <div class="am-item"><div class="am-ico"></div><h3>Co-Working Lounge</h3><p>Glass-walled work pods for residents, off the main lobby.</p></div>
+    <div class="am-item"><div class="am-ico"></div><h3>Kids' Deck</h3><p>A shaded play deck separated from the vehicular podium.</p></div>
+    <div class="am-item"><div class="am-ico"></div><h3>3-Tier Security</h3><p>Boom-barrier entry, lobby concierge and floor-wise access control.</p></div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div>
+    <div class="tag" style="font-size:11px;letter-spacing:.3em;color:var(--brass);font-family:'JetBrains Mono',monospace;">05 — GET IN TOUCH</div>
+    <h2>Let's find your <em>floor</em>.</h2>
+    <p>Leave your details and our sales team will walk you through pricing, floor plans and site-visit slots for The Meridian.</p>
+  </div>
+  <div class="contact-form">
+    <input type="text" placeholder="Full name">
+    <input type="text" placeholder="Phone number">
+    <input type="email" placeholder="Email address">
+    <textarea placeholder="Which floor / configuration are you interested in?"></textarea>
+    <button onclick="alert('Thanks — this is a demo site, no message was actually sent.')">Contact Now</button>
+    <div class="form-note">This is a demo build — no data is submitted anywhere.</div>
+  </div>
+</section>
+
+<footer>
+  <span>© 2026 Space Enviro Architects. Demo site.</span>
+  <span>Pune, Maharashtra</span>
+</footer>
+
+<!-- FLOOR / UNITS OVERLAY -->
+<div class="flat-overlay" id="flatOverlay">
+  <div class="overlay-nav">
+    <div class="brand">
+      <div class="brand-mark" style="width:36px;height:36px;"><span style="font-size:6.4px;">SPACE<br>ENVIRO</span></div>
+    </div>
+    <button class="close-btn" id="closeOverlay">✕ Close</button>
+  </div>
+  <div class="overlay-body">
+    <div class="of-tag" id="ofTag">FLOOR 12</div>
+    <div class="of-title" id="ofTitle">Four Residences, Top View</div>
+    <p class="of-sub" id="ofSub">Two 2BHKs facing the podium gardens, two 3BHKs facing the skyline — mirrored across the central core.</p>
+
+    <div class="unit-grid" id="unitGrid"></div>
+
+    <p class="of-desc">Plans shown are simplified top-view schematics for this demo — not construction drawings. All areas, facings and layouts are placeholder values and will be replaced with the actual sanctioned floor plans before launch.</p>
+
+    <div class="of-cta">
+      <h3>Ready to see this floor in person?</h3>
+      <button onclick="alert('Thanks — this is a demo site, no message was actually sent.')">Contact Now</button>
+    </div>
+  </div>
+</div>
+
+<div class="cloud-wipe" id="cloudWipe"></div>
+
+<script>
+/* ---------------- DATA ---------------- */
+const TOTAL_FLOORS = 21;
+const floors = [];
+for(let i=1;i<=TOTAL_FLOORS;i++){
+  const base2 = 610 + (i*7 % 6)*16;
+  const base3 = 960 + (i*11 % 8)*20;
+  floors.push({
+    num:i,
+    units:[
+      {id:'A', type:'2BHK', area: base2, facing:'Garden · East'},
+      {id:'B', type:'2BHK', area: base2+18, facing:'Garden · North'},
+      {id:'C', type:'3BHK', area: base3, facing:'Skyline · West'},
+      {id:'D', type:'3BHK', area: base3+24, facing:'Skyline · South'}
+    ]
+  });
+}
+
+/* ---------------- CLOUDS ---------------- */
+function makeClouds(container, count, opts){
+  for(let i=0;i<count;i++){
+    const c = document.createElement('div');
+    c.className='cloud';
+    const w = opts.minW + Math.random()*(opts.maxW-opts.minW);
+    const h = w*0.45;
+    c.style.width = w+'px';
+    c.style.height = h+'px';
+    c.style.left = (Math.random()*100)+'%';
+    c.style.top = (opts.minTop + Math.random()*(opts.maxTop-opts.minTop))+'%';
+    c.style.opacity = 0.55 + Math.random()*0.35;
+    container.appendChild(c);
+  }
+}
+makeClouds(document.getElementById('heroClouds'), 9, {minW:160,maxW:420,minTop:58,maxTop:92});
+makeClouds(document.getElementById('stageClouds'), 10, {minW:180,maxW:460,minTop:10,maxTop:70});
+
+/* ---------------- BUILD CUBE FACES ---------------- */
+function buildFrontFace(target, windowsPerFloor){
+  const cream = document.createElement('div');
+  cream.className='block cream';
+  const dark = document.createElement('div');
+  dark.className='block dark';
+  const core = document.createElement('div');
+  core.className='core-strip';
+  dark.appendChild(core);
+
+  for(let i=0;i<TOTAL_FLOORS;i++){
+    const rowC = document.createElement('div');
+    rowC.className='floor-row'; rowC.dataset.floor = i+1;
+    for(let w=0;w<windowsPerFloor;w++){ const win=document.createElement('div'); win.className='win'; rowC.appendChild(win); }
+    cream.appendChild(rowC);
+
+    const rowD = document.createElement('div');
+    rowD.className='floor-row'; rowD.dataset.floor = i+1;
+    for(let w=0;w<windowsPerFloor;w++){ const win=document.createElement('div'); win.className='win'; rowD.appendChild(win); }
+    dark.appendChild(rowD);
+  }
+  target.appendChild(cream);
+  target.appendChild(dark);
+}
+function buildPlainFace(target, windowsPerFloor, lit){
+  for(let i=0;i<TOTAL_FLOORS;i++){
+    const row = document.createElement('div');
+    row.className='floor-row'; row.dataset.floor = i+1;
+    for(let w=0;w<windowsPerFloor;w++){ const win=document.createElement('div'); win.className='win'; row.appendChild(win); }
+    target.appendChild(row);
+  }
+}
+buildFrontFace(document.getElementById('faceFront'), 3);
+buildPlainFace(document.getElementById('faceBack'), 4);
+buildPlainFace(document.getElementById('faceRight'), 2);
+buildPlainFace(document.getElementById('faceLeft'), 2);
+
+/* ---------------- FLOOR MARKERS ---------------- */
+const markers = document.getElementById('floorMarkers');
+for(let i=TOTAL_FLOORS;i>=1;i--){
+  const row = document.createElement('div');
+  row.className='fm-row';
+  row.innerHTML = `<span class="fm-num mono">F${i.toString().padStart(2,'0')}</span><button data-floor="${i}">View floor plans</button>`;
+  markers.appendChild(row);
+}
+
+/* ---------------- FLOOR GRID (directory section) ---------------- */
+const grid = document.getElementById('floorGrid');
+floors.slice().reverse().forEach(f=>{
+  const card = document.createElement('div');
+  card.className='floor-card';
+  card.innerHTML = `
+    <div class="fc-top">
+      <div class="fc-num serif">${f.num.toString().padStart(2,'0')}</div>
+    </div>
+    <div class="fc-type">2 × 2BHK (${f.units[0].area}–${f.units[1].area} sq.ft.)<br>2 × 3BHK (${f.units[2].area}–${f.units[3].area} sq.ft.)</div>
+    <button data-floor="${f.num}">View floor plans</button>
+  `;
+  grid.appendChild(card);
+});
+
+/* ---------------- TOP-VIEW FLOOR PLAN SVGs ---------------- */
+function svgPlan(type){
+  if(type==='2BHK'){
+    return `
+    <svg viewBox="0 0 240 180" xmlns="http://www.w3.org/2000/svg">
+      <rect x="4" y="4" width="232" height="172" fill="none" stroke="#c9a66b" stroke-width="1.5"/>
+      <rect x="10" y="66" width="140" height="98" fill="#2a2d38" stroke="#8f8a7c" stroke-width="1"/>
+      <text x="80" y="118" fill="#cfc9bd" font-size="11" text-anchor="middle" font-family="Inter,sans-serif">LIVING / DINING</text>
+      <rect x="10" y="10" width="70" height="50" fill="#333649" stroke="#8f8a7c" stroke-width="1"/>
+      <text x="45" y="38" fill="#cfc9bd" font-size="9.5" text-anchor="middle" font-family="Inter,sans-serif">KITCHEN</text>
+      <rect x="86" y="10" width="64" height="50" fill="#2f3240" stroke="#8f8a7c" stroke-width="1"/>
+      <text x="118" y="38" fill="#cfc9bd" font-size="9.5" text-anchor="middle" font-family="Inter,sans-serif">BEDROOM</text>
+      <rect x="156" y="10" width="76" height="154" fill="#363042" stroke="#8f8a7c" stroke-width="1"/>
+      <text x="194" y="90" fill="#cfc9bd" font-size="9.5" text-anchor="middle" font-family="Inter,sans-serif">MASTER</text>
+      <text x="194" y="103" fill="#cfc9bd" font-size="9.5" text-anchor="middle" font-family="Inter,sans-serif">BEDROOM</text>
+      <rect x="10" y="168" width="140" height="6" fill="#c9a66b" opacity="0.6"/>
+      <text x="80" y="176" fill="#c9a66b" font-size="7.5" text-anchor="middle" font-family="'JetBrains Mono',monospace" opacity="0">BALCONY</text>
+    </svg>`;
+  }
+  return `
+    <svg viewBox="0 0 240 180" xmlns="http://www.w3.org/2000/svg">
+      <rect x="4" y="4" width="232" height="172" fill="none" stroke="#c9a66b" stroke-width="1.5"/>
+      <rect x="10" y="66" width="150" height="98" fill="#2a2d38" stroke="#8f8a7c" stroke-width="1"/>
+      <text x="85" y="118" fill="#cfc9bd" font-size="11" text-anchor="middle" font-family="Inter,sans-serif">LIVING / DINING</text>
+      <rect x="10" y="10" width="70" height="50" fill="#333649" stroke="#8f8a7c" stroke-width="1"/>
+      <text x="45" y="38" fill="#cfc9bd" font-size="9.5" text-anchor="middle" font-family="Inter,sans-serif">KITCHEN</text>
+      <rect x="86" y="10" width="74" height="50" fill="#2f3240" stroke="#8f8a7c" stroke-width="1"/>
+      <text x="123" y="38" fill="#cfc9bd" font-size="9.5" text-anchor="middle" font-family="Inter,sans-serif">BEDROOM 2</text>
+      <rect x="166" y="10" width="66" height="76" fill="#363042" stroke="#8f8a7c" stroke-width="1"/>
+      <text x="199" y="50" fill="#cfc9bd" font-size="9" text-anchor="middle" font-family="Inter,sans-serif">MASTER</text>
+      <text x="199" y="62" fill="#cfc9bd" font-size="9" text-anchor="middle" font-family="Inter,sans-serif">BEDROOM</text>
+      <rect x="166" y="92" width="66" height="72" fill="#333649" stroke="#8f8a7c" stroke-width="1"/>
+      <text x="199" y="130" fill="#cfc9bd" font-size="9" text-anchor="middle" font-family="Inter,sans-serif">BEDROOM 3</text>
+      <rect x="10" y="168" width="150" height="6" fill="#c9a66b" opacity="0.6"/>
+    </svg>`;
+}
+
+/* ---------------- SCROLL-DRIVEN 3D STAGE ---------------- */
+const stageTrack = document.getElementById('stageTrack');
+const towerRotator = document.getElementById('towerRotator');
+const caption = document.getElementById('stageCaption');
+const floorMarkersEl = document.getElementById('floorMarkers');
+const allFrontRows = () => document.querySelectorAll('.face.front .floor-row');
+
+let ticking = false;
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+function lerp(a,b,t){return a+(b-a)*t;}
+
+function updateStage(){
+  const rect = stageTrack.getBoundingClientRect();
+  const total = rect.height - window.innerHeight;
+  const progress = clamp(-rect.top / total, 0, 1);
+
+  // sweeps from the back/side round to dead-front, revealing all 4 faces in turn
+  const rotateY = lerp(-190, 0, Math.min(progress/0.8, 1));
+  const scale = lerp(0.5, 1.05, Math.min(progress/0.6, 1));
+  const translateY = lerp(40, 0, Math.min(progress/0.5, 1));
+
+  towerRotator.style.transform = `translateY(${translateY}px) scale(${scale}) rotateY(${rotateY}deg)`;
+
+  caption.classList.toggle('show', progress > 0.03 && progress < 0.4);
+
+  document.getElementById('stageClouds').style.opacity = clamp(1 - progress*1.5, 0, 1);
+
+  const litStart = 0.4, litEnd = 0.92;
+  const litProgress = clamp((progress-litStart)/(litEnd-litStart), 0, 1);
+  const litCount = Math.floor(litProgress * TOTAL_FLOORS);
+  allFrontRows().forEach(row=>{
+    const f = parseInt(row.dataset.floor,10);
+    row.classList.toggle('lit', f <= litCount);
+  });
+
+  floorMarkersEl.classList.toggle('show', progress > 0.93);
+
+  ticking = false;
+}
+window.addEventListener('scroll', ()=>{
+  if(!ticking){ requestAnimationFrame(updateStage); ticking = true; }
+}, {passive:true});
+window.addEventListener('resize', updateStage);
+updateStage();
+
+/* ---------------- FLOOR OVERLAY + CLOUD WIPE ---------------- */
+const overlay = document.getElementById('flatOverlay');
+const cloudWipe = document.getElementById('cloudWipe');
+const ofTag = document.getElementById('ofTag');
+const ofTitle = document.getElementById('ofTitle');
+const ofSub = document.getElementById('ofSub');
+const unitGrid = document.getElementById('unitGrid');
+
+function playCloudWipe(cb){
+  cloudWipe.innerHTML = '';
+  const blobs = [];
+  for(let i=0;i<7;i++){
+    const s = document.createElement('span');
+    const size = 500 + Math.random()*500;
+    s.style.width = size+'px';
+    s.style.height = size+'px';
+    s.style.left = (Math.random()*100)+'%';
+    s.style.top = (Math.random()*100)+'%';
+    cloudWipe.appendChild(s);
+    blobs.push(s);
+  }
+  requestAnimationFrame(()=>{
+    blobs.forEach((b,i)=>{
+      b.style.transition = `transform .7s cubic-bezier(.2,.7,.3,1) ${i*40}ms, opacity .7s ease ${i*40}ms`;
+      b.style.transform = 'scale(1)';
+      b.style.opacity = '1';
+    });
+  });
+  setTimeout(()=>{
+    cb();
+    blobs.forEach((b,i)=>{
+      b.style.transition = `transform .6s cubic-bezier(.4,0,.6,1) ${i*30}ms, opacity .6s ease ${i*30}ms`;
+      b.style.transform = 'scale(0)';
+      b.style.opacity = '0';
+    });
+  }, 650);
+}
+
+function openFloor(floorNum){
+  const f = floors.find(x=>x.num===floorNum) || floors[floorNum-1];
+  playCloudWipe(()=>{
+    ofTag.textContent = `FLOOR ${f.num.toString().padStart(2,'0')}`;
+    ofTitle.textContent = 'Four Residences, Top View';
+    ofSub.textContent = 'Two 2BHKs facing the podium gardens, two 3BHKs facing the skyline — mirrored across the central core.';
+    unitGrid.innerHTML = f.units.map((u, idx)=>`
+      <div class="unit-card">
+        <div class="uc-top">
+          <span class="uc-badge ${u.type==='2BHK'?'two':'three'}">${u.type}</span>
+          <span class="uc-id mono">RESIDENCE ${u.id}</span>
+        </div>
+        <div class="plan-wrap ${idx%2===1?'plan-flip':''}">${svgPlan(u.type)}</div>
+        <div class="uc-meta">
+          <div class="uc-area mono">${u.area} sq.ft.<span>CARPET AREA</span></div>
+          <div class="uc-facing">${u.facing}</div>
+        </div>
+        <button class="uc-cta" onclick="alert('Thanks — this is a demo site, no message was actually sent.')">Contact Now</button>
+      </div>
+    `).join('');
+    overlay.classList.add('open');
+    overlay.scrollTop = 0;
+    document.body.style.overflow = 'hidden';
+  });
+}
+
+document.addEventListener('click', (e)=>{
+  const btn = e.target.closest('[data-floor]');
+  if(btn){ openFloor(parseInt(btn.dataset.floor,10)); }
+
+  const navBtn = e.target.closest('[data-scroll]');
+  if(navBtn){
+    const target = document.getElementById(navBtn.dataset.scroll);
+    if(target){ target.scrollIntoView({behavior:'smooth', block:'start'}); }
+  }
+});
+
+document.getElementById('closeOverlay').addEventListener('click', ()=>{
+  playCloudWipe(()=>{
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  });
+});
+</script>
+</body>
+</html>
