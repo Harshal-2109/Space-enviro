@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Enviro Architects</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Cloud Transition Overlay -->
+    <div id="cloudOverlay" class="cloud-overlay"></div>
+
+    <!-- MAIN HOMEPAGE VIEW -->
+    <main id="homeView" class="view-active">
+        
+        <!-- Glassmorphism Navigation -->
+        <header class="glass-nav">
+            <div class="brand">
+                <img src="image_8b4dd8.png" alt="Space Enviro Architects Logo" class="brand-logo">
+            </div>
+            <div class="nav-links">
+                <span>Projects</span>
+                <span>Studio</span>
+                <span>Vision</span>
+            </div>
+        </header>
+
+        <!-- Hero Section with Clouds -->
+        <section class="hero-section">
+            <div class="hero-content glass-panel">
+                <h1>Shaping Tomorrow's Horizon.</h1>
+                <p>Scroll to explore our latest 21-story residential marvel.</p>
+            </div>
+            <!-- Pure CSS Clouds at the bottom of hero -->
+            <div class="cloud-layer">
+                <div class="cloud cloud-1"></div>
+                <div class="cloud cloud-2"></div>
+                <div class="cloud cloud-3"></div>
+            </div>
+        </section>
+
+        <!-- 3D Scroll Track Section -->
+        <!-- This section is 300vh tall to allow "2 scrolls" of time to animate -->
+        <section id="scrollTrack" class="scroll-track">
+            <div class="sticky-viewport">
+                
+                <div class="scene-3d" id="scene3D">
+                    <img src="image_8b6062.jpg" alt="21 Floor Modern Building" class="building-model">
+                    
+                    <!-- Floor Selection UI (Fades in when stable) -->
+                    <div id="floorSelector" class="floor-selector">
+                        <h3>Select a Floor to View</h3>
+                        <div class="floor-grid">
+                            <button class="floor-btn" data-floor="Penthouse">Penthouse</button>
+                            <button class="floor-btn" data-floor="Floor 15-20">Floors 15-20</button>
+                            <button class="floor-btn" data-floor="Floor 10-14">Floors 10-14</button>
+                            <button class="floor-btn" data-floor="Floor 1-9">Floors 1-9</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <!-- FLAT DETAIL VIEW (Hidden initially) -->
+    <main id="detailView" class="view-hidden">
+        <header class="glass-nav detail-nav">
+            <button id="backBtn" class="back-btn">← Back to Exterior</button>
+            <div class="brand">
+                <img src="image_8b4dd8.png" alt="Space Enviro Architects Logo" class="brand-logo-small">
+            </div>
+        </header>
+
+        <section class="detail-content">
+            <div class="detail-header">
+                <h2 id="dynamicFloorTitle">Penthouse Suite</h2>
+                <p>Premium Panoramic Living Space</p>
+            </div>
+
+            <div class="spec-grid">
+                <div class="spec-card glass-panel">
+                    <span class="spec-label">Carpet Area</span>
+                    <span class="spec-value">3,250 Sq Ft</span>
+                </div>
+                <div class="spec-card glass-panel">
+                    <span class="spec-label">Configuration</span>
+                    <span class="spec-value">4 BHK + Terrace</span>
+                </div>
+                <div class="spec-card glass-panel">
+                    <span class="spec-label">Facing</span>
+                    <span class="spec-value">East (Sunrise)</span>
+                </div>
+            </div>
+
+            <div class="interior-gallery">
+                <!-- Using aesthetic architectural placeholders -->
+                <div class="gallery-img placeholder-1">Living Area Visualization</div>
+                <div class="gallery-img placeholder-2">Master Bedroom</div>
+                <div class="gallery-img placeholder-3">Terrace View</div>
+            </div>
+
+            <div class="contact-action">
+                <h3>Interested in this space?</h3>
+                <button id="contactBtn" class="contact-btn">Contact Now</button>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
